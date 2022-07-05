@@ -13,11 +13,11 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   width: 100%;
-  height: 325px;
+  height: 300px;
 
   background-color: ${({ theme }) => theme.colors.header};
 
-  justify-content: center;
+  justify-content: flex-start;
   padding: 25px;
   padding-top: ${getStatusBarHeight() + 30}px;
 `;
@@ -36,8 +36,6 @@ export const RentalPeriod = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  margin: 32px 0;
 `;
 
 export const DateInfo = styled.View`
@@ -70,5 +68,5 @@ export const Content = styled.ScrollView.attrs({
 })``;
 
 export const Footer = styled.View`
-  padding: 24px;
+  padding: 0 24px 10px;
 `;
