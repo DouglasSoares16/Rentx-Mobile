@@ -24,8 +24,10 @@ import {
   Price,
   Rent,
   About,
-  Accessories
+  Accessories,
+  Footer
 } from "./styles";
+import { Button } from "../../components/Button";
 
 export function CarDetails() {
   return (
@@ -67,6 +69,10 @@ export function CarDetails() {
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias incidunt quia at quo porro commodi, libero dicta ipsum, dolorum sunt sint perspiciatis molestiae hic adipisci minima non impedit beatae nisi?
         </About>
       </Content>
+
+      <Footer>
+        <Button title="Escolher período do aluguel" />
+      </Footer>
     </Container>
   );
 }
