@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
 import { Accessory } from "../../components/Accessory";
+import { Button } from "../../components/Button";
 
 import SpeedSvg from "../../assets/speed.svg";
 import AccelerationSvg from "../../assets/acceleration.svg";
@@ -27,9 +29,18 @@ import {
   Accessories,
   Footer
 } from "./styles";
-import { Button } from "../../components/Button";
+
+interface NavigationProps {
+  navigate(screen: string): void;
+}
 
 export function CarDetails() {
+  const { navigate } = useNavigation<NavigationProps>();
+
+  function handleSchedulingCar() {
+    navigate("Scheduling");
+  }
+
   return (
     <Container>
       <Header>
@@ -71,7 +82,7 @@ export function CarDetails() {
       </Content>
 
       <Footer>
-        <Button title="Escolher período do aluguel" />
+        <Button title="Escolher período do aluguel" onPress={handleSchedulingCar} />
       </Footer>
     </Container>
   );

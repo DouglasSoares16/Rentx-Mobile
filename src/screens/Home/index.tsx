@@ -1,4 +1,5 @@
-import React from "react";
+import React from "react"; 
+import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 
@@ -13,7 +14,13 @@ import {
   TotalCars
 } from "./styles";
 
+interface NavigationProps {
+  navigate(screen: string): void;
+}
+
 export function Home() {
+  const { navigate } = useNavigation<NavigationProps>();
+
   const data = [
     {
       name: "RS5 Coupé",
@@ -27,7 +34,11 @@ export function Home() {
       price: 190,
       thumbnail: "https://i.pinimg.com/originals/e3/99/6c/e3996cbc32b254dd28205dd7e36a6a11.png",
     }
-  ]
+  ];
+
+  function handleCarDetails() {
+    navigate("CarDetails");
+  }
 
   return (
     <Container>
@@ -50,7 +61,7 @@ export function Home() {
       <CarList
         data={[1, 2, 3, 4, 5, 6]}
         keyExtractor={item => String(item)}
-        renderItem={({ item }) => <Car data={data[0]} />}
+        renderItem={({ item }) => <Car data={data[0]} onPress={handleCarDetails} />}
       />
     </Container>
   );

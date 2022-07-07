@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components/native";
@@ -41,8 +42,18 @@ import {
   RentalPriceTotal
 } from "./styles";
 
+interface NavigationProps {
+  navigate(screen: string): void;
+}
+
 export function SchedulingDetails() {
   const { colors } = useTheme();
+
+  const { navigate } = useNavigation<NavigationProps>();
+
+  function handleSchedulingComplete() {
+    navigate("SchedulingComplete");
+  }
 
   return (
     <Container>
@@ -115,7 +126,10 @@ export function SchedulingDetails() {
       </Content>
 
       <Footer>
-        <Button title="Escolher período do aluguel" />
+        <Button
+          title="Alugar agora"
+          color={colors.success}
+          onPress={handleSchedulingComplete} />
       </Footer>
     </Container>
   );

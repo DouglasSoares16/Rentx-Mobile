@@ -1,5 +1,6 @@
 import React from "react";
 import { RectButtonProps } from "react-native-gesture-handler";
+import { useTheme } from "styled-components/native";
 
 import { Container, Title } from "./styles";
 
@@ -9,8 +10,10 @@ interface Props extends RectButtonProps {
 }
 
 export function Button({ title, color, ...rest }: Props){
+  const {colors} = useTheme();
+
   return (
-    <Container {...rest} color={color}>
+    <Container {...rest} color={color ? color : colors.main}>
       <Title>{title}</Title>
     </Container>
   );
