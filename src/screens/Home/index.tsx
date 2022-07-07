@@ -15,6 +15,7 @@ import {
 } from "./styles";
 import { api } from "../../services/api";
 import { ICarDTO } from "../../dtos/CarDTO";
+import { Load } from "../../components/Load";
 
 interface NavigationProps {
   navigate(screen: string): void;
@@ -63,11 +64,16 @@ export function Home() {
         </HeaderContent>
       </Header>
 
-      <CarList
-        data={cars}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <Car data={item} onPress={handleCarDetails} />}
-      />
+      {isLoading ? (
+        <Load />
+      ) :
+        (
+          <CarList
+            data={cars}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => <Car data={item} onPress={handleCarDetails} />}
+          />
+        )}
     </Container>
   );
 }
