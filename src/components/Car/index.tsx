@@ -19,7 +19,9 @@ import GasolineSvg from "../../assets/gasoline.svg";
 interface CarData {
   name: string;
   brand: string;
-  price: number;
+  rent: {
+    price: number;
+  };
   thumbnail: string;
 }
 
@@ -37,7 +39,7 @@ export function Car({ data, ...rest }: Props){
         <About>
           <Rent>
             <Period>Ao dia</Period>
-            <Price>{`R$ ${data.price}`}</Price>
+            <Price>{`R$ ${data.rent.price}`}</Price>
           </Rent>
 
           <Type>
