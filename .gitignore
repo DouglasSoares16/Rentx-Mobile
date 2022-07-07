@@ -53,3 +53,7 @@ buck-out/
 .expo/
 web-build/
 dist/
+
+# My
+anotation.txt
+config.ts
