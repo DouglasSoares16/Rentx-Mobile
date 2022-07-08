@@ -18,7 +18,7 @@ import { ICarDTO } from "../../dtos/CarDTO";
 import { Load } from "../../components/Load";
 
 interface NavigationProps {
-  navigate(screen: string): void;
+  navigate(screen: string, {}): void;
 }
 
 export function Home() {
@@ -26,8 +26,8 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { navigate } = useNavigation<NavigationProps>();
 
-  function handleCarDetails() {
-    navigate("CarDetails");
+  function handleCarDetails(car: ICarDTO) {
+    navigate("CarDetails", { car });
   }
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export function Home() {
           <CarList
             data={cars}
             keyExtractor={item => item.id}
-            renderItem={({ item }) => <Car data={item} onPress={handleCarDetails} />}
+            renderItem={({ item }) => <Car data={item} onPress={() => handleCarDetails(item)} />}
           />
         )}
     </Container>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
@@ -29,56 +29,74 @@ import {
   Accessories,
   Footer
 } from "./styles";
+import { ICarDTO } from "../../dtos/CarDTO";
+import { StatusBar } from "react-native";
 
 interface NavigationProps {
   navigate(screen: string): void;
+  goBack(): void;
+}
+
+interface Params {
+  car: ICarDTO;
 }
 
 export function CarDetails() {
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate, goBack } = useNavigation<NavigationProps>();
+  const route = useRoute();
+
+  const { car } = route.params as Params;
 
   function handleSchedulingCar() {
     navigate("Scheduling");
   }
 
+  function handleBack() {
+    goBack();
+  }
+
   return (
     <Container>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       <Header>
-        <BackButton />
+        <BackButton onPress={handleBack} />
       </Header>
 
       <CarImages>
         <ImageSlider
-          imageUrl={["https://i.pinimg.com/originals/e3/99/6c/e3996cbc32b254dd28205dd7e36a6a11.png"]}
+          imageUrl={car.photos}
         />
       </CarImages>
 
       <Content>
         <Details>
           <Description>
-            <Brand>Lamborghini</Brand>
+            <Brand>{car.brand}</Brand>
 
-            <Name>Huracan</Name>
+            <Name>{car.name}</Name>
           </Description>
 
           <Rent>
-            <Period>Ao dia</Period>
-            <Price>R$ 500,00</Price>
+            <Period>{car.rent.period}</Period>
+            <Price>R$ {car.rent.price}</Price>
           </Rent>
         </Details>
 
         <Accessories>
-          <Accessory name="380Km/h" icon={SpeedSvg} />
-          <Accessory name="3.2s" icon={AccelerationSvg} />
-          <Accessory name="800 HP" icon={ForceSvg} />
-          <Accessory name="Gasolina" icon={GasolineSvg} />
-          <Accessory name="Auto" icon={ExchangeSvg} />
-          <Accessory name="2 pessoas" icon={PeopleSvg} />
+          {car.accessories.map(accessory => (
+            <Accessory
+              key={accessory.name}
+              name={accessory.name}
+              icon={PeopleSvg} />
+          ))}
         </Accessories>
 
-        <About>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias incidunt quia at quo porro commodi, libero dicta ipsum, dolorum sunt sint perspiciatis molestiae hic adipisci minima non impedit beatae nisi?
-        </About>
+        <About>{car.about}</About>
       </Content>
 
       <Footer>
