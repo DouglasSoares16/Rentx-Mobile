@@ -1,4 +1,5 @@
 import React from "react";
+import { StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -44,21 +45,32 @@ import {
 
 interface NavigationProps {
   navigate(screen: string): void;
+  goBack(): void;
 }
 
 export function SchedulingDetails() {
   const { colors } = useTheme();
 
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate, goBack } = useNavigation<NavigationProps>();
 
   function handleSchedulingComplete() {
     navigate("SchedulingComplete");
   }
 
+  function handleBack() {
+    goBack();
+  }
+
   return (
     <Container>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       <Header>
-        <BackButton />
+        <BackButton onPress={handleBack} />
       </Header>
 
       <CarImages>
