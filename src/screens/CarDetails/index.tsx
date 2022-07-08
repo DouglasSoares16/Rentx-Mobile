@@ -6,13 +6,6 @@ import { ImageSlider } from "../../components/ImageSlider";
 import { Accessory } from "../../components/Accessory";
 import { Button } from "../../components/Button";
 
-import SpeedSvg from "../../assets/speed.svg";
-import AccelerationSvg from "../../assets/acceleration.svg";
-import ForceSvg from "../../assets/force.svg";
-import GasolineSvg from "../../assets/gasoline.svg";
-import ExchangeSvg from "../../assets/exchange.svg";
-import PeopleSvg from "../../assets/people.svg";
-
 import {
   Container,
   Header,
@@ -31,6 +24,7 @@ import {
 } from "./styles";
 import { ICarDTO } from "../../dtos/CarDTO";
 import { StatusBar } from "react-native";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 interface NavigationProps {
   navigate(screen: string): void;
@@ -92,7 +86,7 @@ export function CarDetails() {
             <Accessory
               key={accessory.name}
               name={accessory.name}
-              icon={PeopleSvg} />
+              icon={getAccessoryIcon(accessory.type)} />
           ))}
         </Accessories>
 
