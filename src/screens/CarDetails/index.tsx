@@ -27,7 +27,7 @@ import { StatusBar } from "react-native";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 interface NavigationProps {
-  navigate(screen: string): void;
+  navigate(screen: string, {}): void;
   goBack(): void;
 }
 
@@ -42,7 +42,7 @@ export function CarDetails() {
   const { car } = route.params as Params;
 
   function handleSchedulingCar() {
-    navigate("Scheduling");
+    navigate("Scheduling", { car });
   }
 
   function handleBack() {
