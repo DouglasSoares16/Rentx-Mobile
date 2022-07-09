@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { Alert, StatusBar } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -39,6 +39,7 @@ import { ICarDTO } from "../../dtos/CarDTO";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import { format } from "date-fns";
 import { getPlatformDate } from "../../utils/getPlatformDate";
+import { api } from "../../services/api";
 
 interface NavigationProps {
   navigate(screen: string): void;
@@ -65,8 +66,26 @@ export function SchedulingDetails() {
 
   const { navigate, goBack } = useNavigation<NavigationProps>();
 
-  function handleSchedulingComplete() {
-    navigate("SchedulingComplete");
+  async function handleSchedulingComplete() {
+    try {
+      const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
+
+      const unavailableDates = [
+        ...schedulesByCar.data.unavailable_dates,
+        ...dates,
+      ];
+
+      await api.put(`/schedules_bycars/${car.id}`, {
+        id: car.id,
+        unavailable_dates: unavailableDates
+      });
+
+      navigate("SchedulingComplete");
+    }
+    catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Não foi possível confirmar o agendamento")
+    }
   }
 
   function handleBack() {
