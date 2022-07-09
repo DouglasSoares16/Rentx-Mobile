@@ -313,7 +313,14 @@
         "2021-07-18",
         "2021-05-28",
         "2021-05-29",
-        "2021-05-30"
+        "2021-05-30",
+        "2022-07-09",
+        "2022-07-10",
+        "2022-07-11",
+        "2022-07-12",
+        "2022-07-13",
+        "2022-07-14",
+        "2022-07-15"
       ]
     },
     {
@@ -361,7 +368,13 @@
         "2022-07-12",
         "2022-07-13",
         "2022-07-14",
-        "2022-07-15"
+        "2022-07-15",
+        "2022-07-19",
+        "2022-07-20",
+        "2022-07-21",
+        "2022-07-22",
+        "2022-07-23",
+        "2022-07-24"
       ]
     }
   ],
@@ -369,16 +382,65 @@
     {
       "user_id": 1,
       "car": {
-        "id": "508e7193-0078-4615-9071-920b59038fda",
-        "brand": "volvo",
-        "name": "XC40",
-        "about": "A Poderosa Combinação de um Motor Elétrico de Alto Desempenho e um Motor a Combustão. Compacto e Inovador. Com Design Expressivo, Tecnologias Intuitivas e Estilo Urbano.",
+        "id": "52930821-cbea-4b05-9f45-7c02b1bb0d8c",
+        "brand": "Chevrolet",
+        "name": "Corvette Z06",
+        "about": "O Chevrolet Corvette Z06 inclui freios Brembo de alto desempenho com pinças maiores no conjunto dianteiro, itens aerodinâmicos com capô de fibra de carbono, suspensão para alto desempenho.",
         "rent": {
           "period": "Ao dia",
-          "price": 120
+          "price": 620
         },
         "fuel_type": "gasoline_motor",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/5.png",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/3.png",
+        "accessories": [
+          {
+            "type": "speed",
+            "name": "330km/h"
+          },
+          {
+            "type": "acceleration",
+            "name": "6.2s"
+          },
+          {
+            "type": "turning_diameter",
+            "name": "900 HP"
+          },
+          {
+            "type": "gasoline_motor",
+            "name": "Gasoline"
+          },
+          {
+            "type": "exchange",
+            "name": "Auto"
+          },
+          {
+            "type": "seats",
+            "name": "2 pessoas"
+          }
+        ],
+        "photos": [
+          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/6.png",
+          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/7.png",
+          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/8.png"
+        ]
+      },
+      "startDate": "09/07/2022",
+      "endDate": "15/07/2022",
+      "id": 1
+    },
+    {
+      "user_id": 1,
+      "car": {
+        "id": "59626707-88c5-4877-9350-07f372c0905a",
+        "brand": "mitsubishi",
+        "name": "Lancer",
+        "about": "Mitsubishi Lancer é um belo e agressivo carro. Além do mais, ele encanta pelo conforto e pela eficiência. Bastante firme e estável para dirigir com tranquilidade e segurança.",
+        "rent": {
+          "period": "Ao dia",
+          "price": 220
+        },
+        "fuel_type": "hybrid_motor",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/6.png",
         "accessories": [
           {
             "type": "speed",
@@ -386,15 +448,15 @@
           },
           {
             "type": "acceleration",
-            "name": "1.5s"
+            "name": "2.0s"
           },
           {
             "type": "turning_diameter",
             "name": "600 HP"
           },
           {
-            "type": "gasoline_motor",
-            "name": "Gasolina"
+            "type": "hybrid_motor",
+            "name": "Híbrido"
           },
           {
             "type": "exchange",
@@ -406,12 +468,14 @@
           }
         ],
         "photos": [
-          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/12.png",
-          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/13.png",
-          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/14.png"
+          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/15.png",
+          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/16.png",
+          "https://storage.googleapis.com/golden-wind/ignite/react-native/images/17.png"
         ]
       },
-      "id": 1
+      "startDate": "19/07/2022",
+      "endDate": "24/07/2022",
+      "id": 2
     }
   ]
 }
