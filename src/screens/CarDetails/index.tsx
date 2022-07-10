@@ -63,7 +63,7 @@ export function CarDetails() {
 
       <CarImages>
         <ImageSlider
-          imageUrl={car.photos}
+          imagesUrl={car.photos}
         />
       </CarImages>
 
