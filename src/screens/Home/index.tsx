@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { RectButton, PanGestureHandler } from "react-native-gesture-handler";
 import { useTheme } from "styled-components/native";
-import { StatusBar, StyleSheet } from "react-native";
+import { BackHandler, StatusBar, StyleSheet } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -63,6 +63,12 @@ export function Home() {
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      return true;
+    });
+  }, [])
 
   const positionY = useSharedValue(0);
   const positionX = useSharedValue(0);
