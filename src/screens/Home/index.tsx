@@ -14,7 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { Car } from "../../components/Car";
-import { Load } from "../../components/Load";
+import { LoadAnimation } from "../../components/LoadAnimation";
 
 import {
   CarList,
@@ -115,14 +115,18 @@ export function Home() {
         <HeaderContent>
           <Logo width={RFValue(108)} height={RFValue(12)} />
 
-          <TotalCars>
-            Total {cars.length} carros
-          </TotalCars>
+          {
+            !isLoading && (
+              <TotalCars>
+                Total {cars.length} carros
+              </TotalCars>
+            )
+          }
         </HeaderContent>
       </Header>
 
       {isLoading ? (
-        <Load />
+        <LoadAnimation />
       ) :
         (
           <CarList
