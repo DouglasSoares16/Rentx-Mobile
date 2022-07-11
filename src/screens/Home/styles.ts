@@ -40,22 +40,3 @@ export const CarList = styled(
   },
   showsVerticalScrollIndicator: false
 })``;
-
-interface MyCarsButtonProps extends RectButtonProps {
-  children: ReactNode;
-}
-
-export const MyCarsButton = styled(RectButton)<MyCarsButtonProps>`
-  width: 60px;
-  height: 60px;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 30px;
-  background-color: ${({ theme }) => theme.colors.main};
-
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-`;
