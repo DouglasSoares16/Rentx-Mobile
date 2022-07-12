@@ -16,6 +16,7 @@ export const Container = styled(RectButton) <ContainerProps>`
   justify-content: center;
 
   background-color: ${({ color }) => color};
+  margin-bottom: 8px;
 `;
 
 interface TitleProps {
