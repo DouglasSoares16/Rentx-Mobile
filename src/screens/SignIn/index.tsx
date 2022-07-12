@@ -7,6 +7,7 @@ import {
   Keyboard,
   Alert
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "styled-components/native";
 
 import { Button } from "../../components/Button";
@@ -22,10 +23,16 @@ import {
   Title
 } from "./styles";
 
+interface NavigationProps {
+  navigate(screen: string): void;
+}
+
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
   const { colors } = useTheme();
+  const { navigate } = useNavigation<NavigationProps>();
 
   async function handleSignIn() {
     const schema = Yup.object().shape({
@@ -48,6 +55,10 @@ export function SignIn() {
         );
       }
     }
+  }
+
+  function handleCreateNewAccount() {
+    navigate("SignUpFirstStep");
   }
 
   return (
@@ -94,7 +105,9 @@ export function SignIn() {
               title="Criar conta gratuita"
               light
               color={colors.background_secondary}
-              loading={false} />
+              loading={false} 
+              onPress={handleCreateNewAccount}
+            />
           </Footer>
         </Container>
       </TouchableWithoutFeedback>
