@@ -8,18 +8,25 @@ interface ContainerProps extends RectButtonProps {
   children: ReactNode;
 }
 
-export const Container = styled(RectButton)<ContainerProps>`
+export const Container = styled(RectButton) <ContainerProps>`
   width: 100%;
 
   padding: 19px;
   align-items: center;
   justify-content: center;
 
-  background-color: ${({ color }) => color };
+  background-color: ${({ color }) => color};
 `;
 
-export const Title = styled.Text`
+interface TitleProps {
+  light?: boolean;
+}
+
+export const Title = styled.Text<TitleProps>`
   font-family: ${({ theme }) => theme.fonts.primary_500};
   font-size: ${RFValue(15)}px;
-  color: ${({ theme }) => theme.colors.shape};
+  color: ${({ theme, light }) => light ?
+    theme.colors.header : 
+    theme.colors.shape
+  };
 `;
