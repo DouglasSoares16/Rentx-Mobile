@@ -106,7 +106,7 @@ export function SchedulingDetails() {
     goBack();
   }
 
-  const rentTotal = Number(dates.length * car.rent.price);
+  const rentTotal = Number(dates.length * car.price);
 
   useEffect(() => {
     setRentalPeriod({
@@ -140,8 +140,8 @@ export function SchedulingDetails() {
           </Description>
 
           <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>R$ {car.rent.price}</Price>
+            <Period>{car.period}</Period>
+            <Price>R$ {car.price}</Price>
           </Rent>
         </Details>
 
@@ -184,7 +184,7 @@ export function SchedulingDetails() {
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
 
           <RentalPriceDetails>
-            <RentalPriceQuota>R$ {car.rent.price} x{dates.length} diárias</RentalPriceQuota>
+            <RentalPriceQuota>R$ {car.price} x{dates.length} diárias</RentalPriceQuota>
 
             <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
