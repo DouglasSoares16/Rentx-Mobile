@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
+import React, { useState } from "react";
+import { Alert, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
+import * as Yup from "yup";
 
 import { BackButton } from "../../../components/BackButton";
 import { Bullet } from "../../../components/Bullet";
@@ -19,18 +20,46 @@ import {
 
 interface NavigationProps {
   goBack(): void;
-  navigate(screen: string): void;
+  navigate(screen: string, {}): void;
 }
 
 export function SignUpFirstStep() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [driverLicense, setDriverLicense] = useState("");
+
   const { goBack, navigate } = useNavigation<NavigationProps>();
 
   function handleGoBack() {
     goBack();
   }
 
-  function handleNextStep() {
-    navigate("SignUpSecondStep");
+  async function handleNextStep() {
+    const schema = Yup.object().shape({
+      cnh: Yup.string().required("CNH é obrigatório"),
+      
+      email: Yup.string()
+      .required("E-mail é obrigatório")
+      .email("Digite um e-mail válido"),
+      
+      name: Yup.string().required("Nome é obrigatório"),
+    });
+
+    try {
+      const data = {
+        name,
+        email,
+        cnh: driverLicense
+      };
+
+      await schema.validate(data);
+
+      navigate("SignUpSecondStep", data);
+    } catch(error) {
+      if (error instanceof Yup.ValidationError) {
+        Alert.alert("Erro", error.message);
+      }
+    }
   }
 
   return (
@@ -57,7 +86,11 @@ export function SignUpFirstStep() {
           <Form>
             <FormTitle>1. Dados</FormTitle>
 
-            <Input iconName="user" placeholder="Nome" />
+            <Input
+              iconName="user"
+              placeholder="Nome"
+              onChangeText={setName}
+              value={name} />
 
             <Input
               iconName="mail"
@@ -65,12 +98,17 @@ export function SignUpFirstStep() {
               keyboardType="email-address"
               autoCorrect={false}
               autoCapitalize="none"
+              onChangeText={setEmail}
+              value={email}
             />
 
             <Input
               iconName="credit-card"
               placeholder="CNH"
-              keyboardType="numeric" />
+              keyboardType="numeric"
+              onChangeText={setDriverLicense}
+              value={driverLicense}
+            />
           </Form>
 
           <Button title="Próximo" onPress={handleNextStep} />
