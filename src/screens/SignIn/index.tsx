@@ -22,6 +22,7 @@ import {
   SubTitle,
   Title
 } from "./styles";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface NavigationProps {
   navigate(screen: string): void;
@@ -32,6 +33,7 @@ export function SignIn() {
   const [password, setPassword] = useState("");
   
   const { colors } = useTheme();
+  const { signIn } = useAuth();
   const { navigate } = useNavigation<NavigationProps>();
 
   async function handleSignIn() {
@@ -45,6 +47,11 @@ export function SignIn() {
 
     try {
       await schema.validate({ email, password });
+
+      await signIn({
+        email,
+        password
+      });
     } catch(error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert("Erro", error.message);
