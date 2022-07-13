@@ -7,6 +7,7 @@ import { BackButton } from "../../../components/BackButton";
 import { Bullet } from "../../../components/Bullet";
 import { Button } from "../../../components/Button";
 import { PasswordInput } from "../../../components/Form/PasswordInput";
+import { api } from "../../../services/api";
 
 import {
   Container,
@@ -20,44 +21,56 @@ import {
 
 interface NavigationProps {
   goBack(): void;
-  navigate(screen: string, {}): void;
+  navigate(screen: string, { }): void;
 }
 
 interface UserData {
-  user: {
-    name: string;
-    email: string;
-    cnh: string;
-  }
+  name: string;
+  email: string;
+  cnh: string;
 }
 
 export function SignUpSecondStep() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { goBack, navigate } = useNavigation<NavigationProps>();
   const route = useRoute();
-  
-  const { user } = route.params as UserData;
-  
-  
+
+  const user = route.params as UserData;
+
   const { colors } = useTheme();
   function handleGoBack() {
     goBack();
   }
 
-  function handleRegister() {
-    if (!password || !passwordConfirm) 
+  async function handleRegister() {
+    setIsLoading(true);
+
+    if (!password || !passwordConfirm)
       return Alert.alert("Erro", "Preencha todos os campos");
 
     if (password !== passwordConfirm)
       return Alert.alert("Erro", "As senhas não são iguais");
 
-    navigate("Confirmation", {
-      title: "Conta Criada!",
-      message: `Agora é só fazer login\n e aproveitar.`,
-      nextScreenRoute: "SignIn",
-    });
+    try {
+      await api.post("/users", {
+        name: user.name,
+        email: user.email,
+        password,
+        driver_license: user.cnh
+      });
+
+      navigate("Confirmation", {
+        title: "Conta Criada!",
+        message: `Agora é só fazer login\n e aproveitar.`,
+        nextScreenRoute: "SignIn",
+      });
+    } catch (error: any) {
+      console.log(error.message)
+      Alert.alert("Opa", "Não foi possível realizar o cadastro");
+    }
   }
 
   return (
@@ -67,8 +80,8 @@ export function SignUpSecondStep() {
           <BackButton onPress={handleGoBack} />
 
           <Steps>
-            <Bullet active />
             <Bullet />
+            <Bullet active />
           </Steps>
         </Header>
 
@@ -86,8 +99,8 @@ export function SignUpSecondStep() {
 
             <PasswordInput
               iconName="lock"
-              placeholder="Senha" 
-              onChangeText={setPassword}  
+              placeholder="Senha"
+              onChangeText={setPassword}
               value={password}
             />
             <PasswordInput
@@ -100,7 +113,10 @@ export function SignUpSecondStep() {
           <Button
             title="Cadastrar"
             color={colors.success}
-            onPress={handleRegister} />
+            onPress={handleRegister}
+            enabled={!isLoading}
+            loading={isLoading}
+          />
         </ScrollView>
       </Container>
     </TouchableWithoutFeedback>

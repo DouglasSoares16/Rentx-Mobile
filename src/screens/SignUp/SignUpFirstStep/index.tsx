@@ -80,7 +80,7 @@ export function SignUpFirstStep() {
           </Title>
           <SubTitle>
             Faça seu cadastro{"\n"}
-            de forma rápido e fácil.
+            de forma rápida e fácil.
           </SubTitle>
 
           <Form>
