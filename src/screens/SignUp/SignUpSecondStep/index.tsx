@@ -20,6 +20,7 @@ import {
 
 interface NavigationProps {
   goBack(): void;
+  navigate(screen: string, {}): void;
 }
 
 interface UserData {
@@ -34,7 +35,7 @@ export function SignUpSecondStep() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const { goBack } = useNavigation<NavigationProps>();
+  const { goBack, navigate } = useNavigation<NavigationProps>();
   const route = useRoute();
   
   const { user } = route.params as UserData;
@@ -51,6 +52,12 @@ export function SignUpSecondStep() {
 
     if (password !== passwordConfirm)
       return Alert.alert("Erro", "As senhas não são iguais");
+
+    navigate("Confirmation", {
+      title: "Conta Criada!",
+      message: `Agora é só fazer login\n e aproveitar.`,
+      nextScreenRoute: "SignIn",
+    });
   }
 
   return (

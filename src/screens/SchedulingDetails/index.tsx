@@ -42,7 +42,7 @@ import { getPlatformDate } from "../../utils/getPlatformDate";
 import { api } from "../../services/api";
 
 interface NavigationProps {
-  navigate(screen: string): void;
+  navigate(screen: string, {}): void;
   goBack(): void;
 }
 
@@ -89,7 +89,11 @@ export function SchedulingDetails() {
         unavailable_dates: unavailableDates
       });
 
-      navigate("SchedulingComplete");
+      navigate("Confirmation", {
+        title: "Carro Alugado!",
+        message: `Agora você só precisa ir\n até a concessionária da RENTX\n pegar o seu automóvel.`,
+        nextScreenRoute: "Home",
+      });
     }
     catch (error) {
       setIsLoading(false);
@@ -124,7 +128,7 @@ export function SchedulingDetails() {
       </Header>
 
       <CarImages>
-        <ImageSlider imageUrl={car.photos} />
+        <ImageSlider imagesUrl={car.photos} />
       </CarImages>
 
       <Content>

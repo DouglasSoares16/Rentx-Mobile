@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { StatusBar, useWindowDimensions } from "react-native";
 
 import { ConfirmButton } from "../../components/ConfirmButton";
@@ -19,13 +19,21 @@ interface NavigationProps {
   navigate(screen: string): void;
 }
 
-export function SchedulingComplete() {
-  const { width } = useWindowDimensions();
+interface Params {
+  title: string;
+  message: string;
+  nextScreenRoute: string;
+}
 
+export function Confirmation() {
+  const route = useRoute();
+  const { width } = useWindowDimensions();
   const { navigate } = useNavigation<NavigationProps>();
 
+  const { message, nextScreenRoute, title } = route.params as Params;
+
   function handleBackToHome() {
-    navigate("Home");
+    navigate(nextScreenRoute);
   }
 
   return (
@@ -39,13 +47,9 @@ export function SchedulingComplete() {
 
       <Content>
         <DoneSvg width={80} height={80} />
-        <Title>Carro alugado!</Title>
+        <Title>{title}</Title>
 
-        <Message>
-          Agora você só precisa ir {"\n"}
-          até a concessionária da RENTX {"\n"}
-          pegar o seu automóvel.
-        </Message>
+        <Message>{message}</Message>
 
         <Footer>
           <ConfirmButton title="OK" onPress={handleBackToHome}/>
