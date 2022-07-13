@@ -72,7 +72,7 @@ export const About = styled.Text`
   color: ${({ theme }) => theme.colors.text};
   text-align: justify;
 
-  margin-top: 23px;
+  margin: 23px 0;
   line-height: ${RFValue(25)}px;
 `;
 
@@ -93,6 +93,6 @@ export const Footer = styled.View`
   width: 100%;
   background-color: ${({theme}) => theme.colors.background_secondary};
 
-  padding: 24px;
-  padding-bottom: ${getBottomSpace() + 24}px;
+  padding: 5px 24px;
+  padding-bottom: ${getBottomSpace() + 10}px;
 `;
