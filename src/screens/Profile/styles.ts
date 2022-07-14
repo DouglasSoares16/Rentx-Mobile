@@ -13,8 +13,8 @@ interface OptionsProps {
   children: ReactNode;
 }
 
-export const Container = styled.View`
-  flex: 1;
+export const Container = styled.ScrollView`
+  height: 100%;
   background-color: ${({ theme }) => theme.colors.background_primary};
 `;
 
@@ -76,8 +76,7 @@ export const PhotoButton = styled(RectButton) <ButtonProps>`
   right: 5px;
 `;
 
-export const Content = styled.ScrollView`
-  flex: 1;
+export const Content = styled.View`
   padding: 0 24px;
   margin-top: ${RFValue(122)}px;
 `;
@@ -113,3 +112,5 @@ export const OptionTitle = styled.Text<OptionsProps>`
     theme.colors.text_detail
   };
 `;
+
+export const Section = styled.View``;

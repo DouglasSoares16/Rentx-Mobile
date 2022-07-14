@@ -39,7 +39,8 @@ export function AppTabRoutes() {
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={24} color={color} />
-          )
+          ),
+          tabBarHideOnKeyboard: true
         }}
       />
     </Navigator>
