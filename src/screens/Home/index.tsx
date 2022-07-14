@@ -49,19 +49,29 @@ export function Home() {
   }
 
   useEffect(() => {
+    let isMounted = true;
+
     async function loadData() {
       try {
         const response = await api.get("cars");
 
-        setCars(response.data);
+        if (isMounted) {
+          setCars(response.data);
+        }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
 
     loadData();
+
+    return () => {
+      isMounted = false;
+    }
   }, []);
 
   useEffect(() => {
