@@ -1,5 +1,6 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { api } from "../services/api";
+import UserModel from "../database/model/User";
 
 interface User {
   id: string;
@@ -7,11 +8,7 @@ interface User {
   email: string;
   driver_license: string;
   avatar: string | null;
-}
-
-interface IAuthState {
   token: string;
-  user: User;
 }
 
 interface SignInCredentials {
@@ -31,24 +28,50 @@ interface IAuthProvider {
 }
 
 function AuthProvider({ children }: IAuthProvider) {
-  const [session, setSession] = useState<IAuthState>({} as IAuthState);
+  const [user, setUser] = useState<User>({} as User);
 
   async function signIn({ email, password }: SignInCredentials) {
-    const { data } = await api.post("/sessions", {
-      email,
-      password
-    });
+    try {
+      const { data } = await api.post("/sessions", {
+        email,
+        password
+      });
 
-    api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
-    setSession(data);
+      await UserModel.saveUser({
+        ...data.user,
+        token: data.token
+      });
+
+      setUser({
+        ...data.user,
+        token: data.token
+      });
+    }
+    catch (err: any) {
+      throw new Error(err);
+    }
   }
+
+  useEffect(() => {
+    async function loadUserData() {
+      const userLogged = await UserModel.getUser();
+
+      if (userLogged) {
+        api.defaults.headers.common["Authorization"] = `Bearer ${userLogged.token}`;
+        setUser(userLogged);
+      }
+    }
+
+    loadUserData();
+  }, []);
 
   return (
     <AuthContext.Provider value={
       {
         signIn,
-        user: session.user
+        user
       }
     }>
       {children}
