@@ -1,10 +1,10 @@
 import React from "react";
-import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import { useTheme } from "styled-components/native";
+import { SimpleLineIcons, Feather } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Home } from "../screens/Home";
+import { Profile } from "../screens/Profile";
 import { AppStackRoutes } from "./app.stack.routes";
 
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -35,7 +35,7 @@ export function AppTabRoutes() {
       />
       <Screen
         name="Profile"
-        component={Home} 
+        component={Profile} 
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={24} color={color} />
