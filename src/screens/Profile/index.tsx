@@ -29,6 +29,7 @@ import {
   OptionTitle,
   Section
 } from "./styles";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 export function Profile() {
   const { user, signOut, updateUser } = useAuth();
@@ -38,6 +39,7 @@ export function Profile() {
   const [driverLicense, setDriverLicense] = useState(user.driver_license);
   const [option, setOption] = useState<"dataEdit" | "passwordEdit">("dataEdit");
 
+  const netInfo = useNetInfo();
   const { colors } = useTheme();
   const { goBack } = useNavigation();
 
@@ -63,6 +65,11 @@ export function Profile() {
   }
 
   async function handleUpdateProfile() {
+    if (!netInfo.isConnected) {
+      Alert.alert("Ops", "Você está Offline...");
+      return;
+    }
+
     const schema = Yup.object().shape({
       driverLicense: Yup.string()
         .required("CNH é obrigatória"),
@@ -99,6 +106,11 @@ export function Profile() {
   }
 
   async function handleSelectAvatar() {
+    if (!netInfo.isConnected) {
+      Alert.alert("Ops", "Você está Offline...");
+      return;
+    }
+    
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,

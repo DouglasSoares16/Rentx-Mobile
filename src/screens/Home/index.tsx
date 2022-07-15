@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { RectButton, PanGestureHandler } from "react-native-gesture-handler";
-import { useTheme } from "styled-components/native";
-import { BackHandler, StatusBar, StyleSheet } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { useTheme } from "styled-components/native";
+import { useNavigation } from "@react-navigation/native";
+import { RFValue } from "react-native-responsive-fontsize";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { Alert, BackHandler, StatusBar, StyleSheet } from "react-native";
+import { RectButton, PanGestureHandler } from "react-native-gesture-handler";
 
 import Animated, {
   useAnimatedStyle,
@@ -16,6 +17,10 @@ import Animated, {
 import { Car } from "../../components/Car";
 import { LoadAnimation } from "../../components/LoadAnimation";
 
+import Logo from "../../assets/logo.svg";
+import { api } from "../../services/api";
+import { ICarDTO } from "../../dtos/CarDTO";
+
 import {
   CarList,
   Container,
@@ -25,10 +30,6 @@ import {
 } from "./styles";
 const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 
-import { api } from "../../services/api";
-import { ICarDTO } from "../../dtos/CarDTO";
-import Logo from "../../assets/logo.svg";
-
 interface NavigationProps {
   navigate(screen: string, { }?): void;
 }
@@ -37,8 +38,9 @@ export function Home() {
   const [cars, setCars] = useState<ICarDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { navigate } = useNavigation<NavigationProps>();
+  const netInfo = useNetInfo();
   const { colors } = useTheme();
+  const { navigate } = useNavigation<NavigationProps>();
 
   function handleCarDetails(car: ICarDTO) {
     navigate("CarDetails", { car });
@@ -78,7 +80,13 @@ export function Home() {
     BackHandler.addEventListener("hardwareBackPress", () => {
       return true;
     });
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (netInfo.isConnected === false) {
+      Alert.alert("Ops", "Você está Offline...");
+    }
+  }, [netInfo.isConnected]);
 
   const positionY = useSharedValue(0);
   const positionX = useSharedValue(0);
