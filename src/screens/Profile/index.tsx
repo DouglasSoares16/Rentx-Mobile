@@ -46,7 +46,20 @@ export function Profile() {
   }
 
   async function handleLogout() {
-    await signOut();
+    Alert.alert(
+      "Tem certeza?", 
+      "Lembre-se: Se você sair, precisará de internet para conectar-se novamente.",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {},
+        },
+        {
+          text: "Sair",
+          onPress: async () => await signOut(),
+        }
+      ]
+    );
   }
 
   async function handleUpdateProfile() {
