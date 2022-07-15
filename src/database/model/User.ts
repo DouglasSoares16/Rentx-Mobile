@@ -7,7 +7,7 @@ interface IUser {
   name: string;
   email: string;
   driver_license: string;
-  avatar: string;
+  avatar: string | null;
   token: string;
 }
 

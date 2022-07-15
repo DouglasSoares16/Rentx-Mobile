@@ -1,13 +1,18 @@
+import * as Yup from "yup";
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from "react-native";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform, Alert, StatusBar } from "react-native";
 
+import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Input";
+import { useAuth } from "../../contexts/AuthContext";
 import { BackButton } from "../../components/BackButton";
+import { PasswordInput } from "../../components/Form/PasswordInput";
 
 import {
   Container,
@@ -24,12 +29,9 @@ import {
   OptionTitle,
   Section
 } from "./styles";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { PasswordInput } from "../../components/Form/PasswordInput";
-import { useAuth } from "../../contexts/AuthContext";
 
 export function Profile() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, updateUser } = useAuth();
 
   const [name, setName] = useState(user.name);
   const [avatar, setAvatar] = useState(user.avatar);
@@ -47,8 +49,40 @@ export function Profile() {
     await signOut();
   }
 
-  function handleOptionChange(option: "dataEdit" | "passwordEdit") {
-    setOption(option);
+  async function handleUpdateProfile() {
+    const schema = Yup.object().shape({
+      driverLicense: Yup.string()
+        .required("CNH é obrigatória"),
+
+      name: Yup.string()
+        .required("O Nome é obrigatório")
+    });
+
+    try {
+      await schema.validate({
+        name,
+        driverLicense
+      });
+
+      await updateUser({
+        name,
+        email: user.email,
+        avatar,
+        driver_license: driverLicense,
+        id: user.id,
+        token: user.token
+      });
+
+      Alert.alert("Sucesso", "Perfil Atualizado!");
+    } catch (error: any) {
+      if (error instanceof Yup.ValidationError) {
+        Alert.alert("Erro", error.message);
+      }
+      else {
+        console.log(error);
+        Alert.alert("Erro", "Não foi possível atualizar o perfil");
+      }
+    }
   }
 
   async function handleSelectAvatar() {
@@ -66,10 +100,20 @@ export function Profile() {
       setAvatar(result.uri);
   }
 
+  function handleOptionChange(option: "dataEdit" | "passwordEdit") {
+    setOption(option);
+  }
+
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} enabled>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor={colors.header}
+            translucent
+          />
+
           <Header>
             <HeaderTop>
               <BackButton color={colors.shape} onPress={handleGoBack} />
@@ -163,6 +207,11 @@ export function Profile() {
                   </Section>
                 )
             }
+
+            <Button
+              title="Salvar Alterações"
+              onPress={handleUpdateProfile}
+            />
           </Content>
         </Container>
       </TouchableWithoutFeedback>

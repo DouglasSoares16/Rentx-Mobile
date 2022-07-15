@@ -20,6 +20,7 @@ interface IAuthContextData {
   user: User;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): Promise<void>;
+  updateUser(data: User): Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
@@ -78,12 +79,24 @@ function AuthProvider({ children }: IAuthProvider) {
     }
   }
 
+  async function updateUser(data: User) {
+    try {
+      await UserModel.saveUser(data);
+
+      setUser(data);
+    }
+    catch(error: any) {
+      throw new Error(error);
+    }
+  }
+
   return (
     <AuthContext.Provider value={
       {
-        signIn,
         user,
-        signOut
+        signIn,
+        signOut,
+        updateUser
       }
     }>
       {children}
