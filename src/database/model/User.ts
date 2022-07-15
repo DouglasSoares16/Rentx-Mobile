@@ -26,5 +26,9 @@ export default {
     const user = JSON.stringify(data);
 
     await AsyncStorage.setItem(userKey, user);
+  },
+
+  async deleteUser() {
+    await AsyncStorage.removeItem(userKey);
   }
 };
