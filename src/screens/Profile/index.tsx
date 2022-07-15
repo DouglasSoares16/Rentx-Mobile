@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -28,9 +29,13 @@ import { PasswordInput } from "../../components/Form/PasswordInput";
 import { useAuth } from "../../contexts/AuthContext";
 
 export function Profile() {
+  const { user } = useAuth();
+
+  const [name, setName] = useState(user.name);
+  const [avatar, setAvatar] = useState(user.avatar);
+  const [driverLicense, setDriverLicense] = useState(user.driver_license);
   const [option, setOption] = useState<"dataEdit" | "passwordEdit">("dataEdit");
 
-  const { user } = useAuth();
   const { colors } = useTheme();
   const { goBack } = useNavigation();
 
@@ -44,6 +49,22 @@ export function Profile() {
 
   function handleOptionChange(option: "dataEdit" | "passwordEdit") {
     setOption(option);
+  }
+
+  async function handleSelectAvatar() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1
+    });
+
+    if (result.cancelled)
+      return;
+
+    if (result.uri)
+      setAvatar(result.uri);
+
   }
 
   return (
@@ -65,8 +86,8 @@ export function Profile() {
             </HeaderTop>
 
             <PhotoContainer>
-              <Photo source={{ uri: "https://github.com/DouglasSoares16.png" }} />
-              <PhotoButton onPress={() => { }}>
+              {!!avatar && (<Photo source={{ uri: avatar }} />)}
+              <PhotoButton onPress={handleSelectAvatar}>
                 <Feather
                   name="camera"
                   size={RFValue(24)}
@@ -93,50 +114,55 @@ export function Profile() {
             </Options>
 
             {
-              option === "dataEdit" ? (
-                <Section>
-                  <Input
-                    iconName="user"
-                    placeholder="Nome"
-                    autoCorrect={false}
-                    autoCapitalize="sentences"
-                    defaultValue={user.name}
-                  />
+              option === "dataEdit" ?
+                (
+                  <Section>
+                    <Input
+                      iconName="user"
+                      placeholder="Nome"
+                      autoCorrect={false}
+                      autoCapitalize="sentences"
+                      defaultValue={user.name}
+                      onChangeText={setName}
+                      value={name}
+                    />
 
-                  <Input
-                    iconName="mail"
-                    placeholder="E-mail"
-                    editable={false}
-                    defaultValue={user.email}
-                  />
+                    <Input
+                      iconName="mail"
+                      placeholder="E-mail"
+                      editable={false}
+                      defaultValue={user.email}
+                    />
 
-                  <Input
-                    iconName="credit-card"
-                    placeholder="CNH"
-                    keyboardType="numeric"
-                    defaultValue={user.driver_license}
-                  />
-                </Section>
-              ) 
-              : 
-              (
-                <Section>
-                  <PasswordInput
-                    iconName="lock"
-                    placeholder="Senha Atual"
-                  />
+                    <Input
+                      iconName="credit-card"
+                      placeholder="CNH"
+                      keyboardType="numeric"
+                      defaultValue={user.driver_license}
+                      onChangeText={setDriverLicense}
+                      value={driverLicense}
+                    />
+                  </Section>
+                )
+                :
+                (
+                  <Section>
+                    <PasswordInput
+                      iconName="lock"
+                      placeholder="Senha Atual"
+                    />
 
-                  <PasswordInput
-                    iconName="lock"
-                    placeholder="Nova Senha"
-                  />
+                    <PasswordInput
+                      iconName="lock"
+                      placeholder="Nova Senha"
+                    />
 
-                  <PasswordInput
-                    iconName="lock"
-                    placeholder="Repetir Senha"
-                  />
-                </Section>
-              )
+                    <PasswordInput
+                      iconName="lock"
+                      placeholder="Repetir Senha"
+                    />
+                  </Section>
+                )
             }
           </Content>
         </Container>
