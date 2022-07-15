@@ -5,17 +5,26 @@ import { AuthRoutes } from "./auth.routes";
 import { AppTabRoutes } from "./app.tab.routes";
 
 import { useAuth } from "../contexts/AuthContext";
+import { LoadAnimation } from "../components/LoadAnimation";
 
-export function Routes(){
-  const { user } = useAuth();
+export function Routes() {
+  const { user, loading } = useAuth();
 
   return (
-    <NavigationContainer>
-      { user?.id ? (
-        <AppTabRoutes />
-      ) : (
-        <AuthRoutes />
-      )}
-    </NavigationContainer>
+    loading ?
+      (
+        <LoadAnimation />
+      )
+      :
+      (
+        <NavigationContainer>
+          {user?.id ? (
+            <AppTabRoutes />
+          ) : (
+            <AuthRoutes />
+          )}
+        </NavigationContainer>
+      )
+
   );
 }

@@ -18,6 +18,7 @@ interface SignInCredentials {
 
 interface IAuthContextData {
   user: User;
+  loading: boolean;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): Promise<void>;
   updateUser(data: User): Promise<void>;
@@ -31,6 +32,7 @@ interface IAuthProvider {
 
 function AuthProvider({ children }: IAuthProvider) {
   const [user, setUser] = useState<User>({} as User);
+  const [loading, setLoading] = useState(true);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
@@ -63,6 +65,7 @@ function AuthProvider({ children }: IAuthProvider) {
       if (userLogged) {
         api.defaults.headers.common["Authorization"] = `Bearer ${userLogged.token}`;
         setUser(userLogged);
+        setLoading(false);
       }
     }
 
@@ -85,7 +88,7 @@ function AuthProvider({ children }: IAuthProvider) {
 
       setUser(data);
     }
-    catch(error: any) {
+    catch (error: any) {
       throw new Error(error);
     }
   }
@@ -95,6 +98,7 @@ function AuthProvider({ children }: IAuthProvider) {
       {
         user,
         signIn,
+        loading,
         signOut,
         updateUser
       }
