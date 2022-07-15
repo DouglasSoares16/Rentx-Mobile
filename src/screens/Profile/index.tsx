@@ -29,7 +29,7 @@ import { PasswordInput } from "../../components/Form/PasswordInput";
 import { useAuth } from "../../contexts/AuthContext";
 
 export function Profile() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const [name, setName] = useState(user.name);
   const [avatar, setAvatar] = useState(user.avatar);
@@ -43,8 +43,8 @@ export function Profile() {
     goBack();
   }
 
-  function handleLogout() {
-    // logout
+  async function handleLogout() {
+    await signOut();
   }
 
   function handleOptionChange(option: "dataEdit" | "passwordEdit") {
@@ -64,7 +64,6 @@ export function Profile() {
 
     if (result.uri)
       setAvatar(result.uri);
-
   }
 
   return (
