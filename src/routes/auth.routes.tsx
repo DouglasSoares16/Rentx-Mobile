@@ -16,11 +16,6 @@ export function AuthRoutes() {
     }}>
       <Screen name="Splash" component={Splash} />
 
-      <Screen
-        name="Home"
-        component={Home}
-        options={{ gestureEnabled: false }} />
-
       <Screen name="SignIn" component={SignIn} />
       <Screen name="SignUpFirstStep" component={SignUpFirstStep} />
       <Screen name="SignUpSecondStep" component={SignUpSecondStep} />
