@@ -67,26 +67,18 @@ export function SchedulingDetails() {
 
   const { navigate, goBack } = useNavigation<NavigationProps>();
 
+  const rentTotal = Number(dates.length * car.price);
+
   async function handleSchedulingComplete() {
     try {
       setIsLoading(true);
-      const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
 
-      const unavailableDates = [
-        ...schedulesByCar.data.unavailable_dates,
-        ...dates,
-      ];
-
-      await api.post("schedules_byuser", {
+      await api.post("/rentals", {
         user_id: 1,
-        car,
-        startDate: format(getPlatformDate(new Date(dates[0])), "dd/MM/yyyy"),
-        endDate: format(getPlatformDate(new Date(dates[dates.length - 1])), "dd/MM/yyyy")
-      })
-
-      await api.put(`/schedules_bycars/${car.id}`, {
-        id: car.id,
-        unavailable_dates: unavailableDates
+        car_id: car.id,
+        start_date: new Date(dates[0]),
+        end_date: new Date(dates[dates.length - 1]),
+        total: rentTotal
       });
 
       navigate("Confirmation", {
@@ -105,8 +97,6 @@ export function SchedulingDetails() {
   function handleBack() {
     goBack();
   }
-
-  const rentTotal = Number(dates.length * car.price);
 
   useEffect(() => {
     setRentalPeriod({
