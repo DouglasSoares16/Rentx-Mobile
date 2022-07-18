@@ -1,15 +1,16 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
-import { useTheme } from "styled-components/native";
+import { format, parseISO } from "date-fns";
 import { AntDesign } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { useTheme } from "styled-components/native";
+import { useNavigation } from "@react-navigation/native";
 
-import { BackButton } from "../../components/BackButton";
 import { Car } from "../../components/Car";
+import { BackButton } from "../../components/BackButton";
 import { LoadAnimation } from "../../components/LoadAnimation";
 
-import { ICarDTO } from "../../dtos/CarDTO";
 import { api } from "../../services/api";
+import { ICarDTO } from "../../dtos/CarDTO";
 
 import {
   Container,
@@ -35,8 +36,8 @@ interface NavigationProps {
 
 export interface CarsProps {
   car: ICarDTO;
-  startDate: string;
-  endDate: string;
+  start_date: string;
+  end_date: string;
 }
 
 export function MyCars() {
@@ -50,20 +51,20 @@ export function MyCars() {
     goBack();
   }
 
-  function handleCarDetails(car: ICarDTO) {
-    navigate("CarDetails", { car });
+  function handleCarDetails(car_id: string) {
+    navigate("CarDetails", { car_id });
   }
 
   useEffect(() => {
     async function loadCars() {
       try {
-        const { data } = await api.get("schedules_byuser?user_id=1");
+        const { data } = await api.get("/rentals");
 
-        const cars = data.map((schedule: any) => {
+        const cars = data.map((schedule: CarsProps) => {
           return {
             car: schedule.car,
-            startDate: schedule.startDate,
-            endDate: schedule.endDate,
+            start_date: format(parseISO(schedule.start_date), "dd/MM/yyyy"),
+            end_date: format(parseISO(schedule.end_date), "dd/MM/yyyy"),
           }
         });
 
@@ -113,21 +114,21 @@ export function MyCars() {
               keyExtractor={item => item.car.id}
               renderItem={({ item }) => (
                 <CarWrapper>
-                  <Car data={item.car} onPress={() => handleCarDetails(item.car)} />
+                  <Car data={item.car} onPress={() => handleCarDetails(item.car.id)} />
                   <CarFooter>
                     <CarFooterTitle>Período</CarFooterTitle>
 
                     <CarFooterPeriod>
-                      <CarFooterDate>{item.startDate}</CarFooterDate>
+                      <CarFooterDate>{item.start_date}</CarFooterDate>
 
                       <AntDesign
                         name="arrowright"
-                        size={26}
+                        size={20}
                         color={colors.title}
                         style={{ marginHorizontal: 10 }} 
                       />
 
-                      <CarFooterDate>{item.endDate}</CarFooterDate>
+                      <CarFooterDate>{item.end_date}</CarFooterDate>
                     </CarFooterPeriod>
                   </CarFooter>
                 </CarWrapper>

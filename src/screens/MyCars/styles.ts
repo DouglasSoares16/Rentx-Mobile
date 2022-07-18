@@ -96,6 +96,7 @@ export const CarFooterTitle = styled.Text`
 
 export const CarFooterPeriod = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 
 export const CarFooterDate = styled.Text`

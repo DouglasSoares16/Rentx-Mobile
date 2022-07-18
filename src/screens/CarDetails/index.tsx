@@ -1,13 +1,13 @@
-import React from "react";
-import { StatusBar, StyleSheet } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { getStatusBarHeight } from "react-native-iphone-x-helper";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "styled-components/native";
+import { StatusBar, StyleSheet } from "react-native";
+import { getStatusBarHeight } from "react-native-iphone-x-helper";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
+import { Button } from "../../components/Button";
+import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
-import { Accessory } from "../../components/Accessory";
-import { Button } from "../../components/Button";
 
 import Animated, {
   Extrapolate,
@@ -35,6 +35,7 @@ import {
 
 import { ICarDTO } from "../../dtos/CarDTO";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
+import { api } from "../../services/api";
 
 interface NavigationProps {
   navigate(screen: string, { }): void;
@@ -42,13 +43,15 @@ interface NavigationProps {
 }
 
 interface Params {
-  car: ICarDTO;
+  car_id: string;
 }
 
 export function CarDetails() {
-  const { navigate, goBack } = useNavigation<NavigationProps>();
+  const [car, setCar] = useState({} as ICarDTO);
+
   const route = useRoute();
   const { colors } = useTheme();
+  const { navigate, goBack } = useNavigation<NavigationProps>();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -75,7 +78,19 @@ export function CarDetails() {
     }
   });
 
-  const { car } = route.params as Params;
+  const { car_id } = route.params as Params;
+
+  useEffect(() => {
+    async function loadData() {
+      const { data } = await api.get(`/cars/${car_id}`);
+
+      console.log(data)
+
+      setCar(data);
+    }
+
+    loadData();
+  }, []);
 
   function handleSchedulingCar() {
     navigate("Scheduling", { car });
@@ -105,7 +120,10 @@ export function CarDetails() {
         <Animated.View style={sliderCarsStyleAnimation}>
           <CarImages>
             <ImageSlider
-              imagesUrl={car.photos}
+              imagesUrl={
+                !!car.photos ?
+                  car.photos : [{ id: car.thumbnail, photo: car.thumbnail }]
+              }
             />
           </CarImages>
         </Animated.View>
@@ -134,14 +152,20 @@ export function CarDetails() {
           </Rent>
         </Details>
 
-        <Accessories>
-          {car.accessories.map(accessory => (
-            <Accessory
-              key={accessory.name}
-              name={accessory.name}
-              icon={getAccessoryIcon(accessory.type)} />
-          ))}
-        </Accessories>
+        {
+          car.accessories &&
+          <Accessories>
+            {
+              car.accessories.map(accessory => (
+                <Accessory
+                  key={accessory.type}
+                  name={accessory.name}
+                  icon={getAccessoryIcon(accessory.type)}
+                />
+              ))
+            }
+          </Accessories>
+        }
 
         <About>{car.about}</About>
       </Animated.ScrollView>

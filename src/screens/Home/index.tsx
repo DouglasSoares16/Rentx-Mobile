@@ -42,8 +42,8 @@ export function Home() {
   const { colors } = useTheme();
   const { navigate } = useNavigation<NavigationProps>();
 
-  function handleCarDetails(car: ICarDTO) {
-    navigate("CarDetails", { car });
+  function handleCarDetails(car_id: string) {
+    navigate("CarDetails", { car_id });
   }
 
   function handleMyCars() {
@@ -150,7 +150,9 @@ export function Home() {
           <CarList
             data={cars}
             keyExtractor={item => item.id}
-            renderItem={({ item }) => <Car data={item} onPress={() => handleCarDetails(item)} />}
+            renderItem={({ item }) => 
+              <Car data={item} onPress={() => handleCarDetails(item.id)} />
+            }
           />
         )}
 
