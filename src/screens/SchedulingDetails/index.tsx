@@ -1,21 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Alert, StatusBar } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { format } from "date-fns";
 import { Feather } from "@expo/vector-icons";
-import { RFValue } from "react-native-responsive-fontsize";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "styled-components/native";
+import { RFValue } from "react-native-responsive-fontsize";
+import { Alert, StatusBar, StyleSheet } from "react-native";
+import { getStatusBarHeight } from "react-native-iphone-x-helper";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-import { BackButton } from "../../components/BackButton";
-import { ImageSlider } from "../../components/ImageSlider";
-import { Accessory } from "../../components/Accessory";
 import { Button } from "../../components/Button";
+import { Accessory } from "../../components/Accessory";
+import { ImageSlider } from "../../components/ImageSlider";
+import { BackButton } from "../../components/BackButton";
+
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue
+} from "react-native-reanimated";
 
 import {
   Container,
   Header,
   CarImages,
   Brand,
-  Content,
   Description,
   Details,
   Name,
@@ -35,14 +44,14 @@ import {
   RentalPriceQuota,
   RentalPriceTotal
 } from "./styles";
-import { ICarDTO } from "../../dtos/CarDTO";
-import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
-import { format } from "date-fns";
-import { getPlatformDate } from "../../utils/getPlatformDate";
+
 import { api } from "../../services/api";
+import { ICarDTO } from "../../dtos/CarDTO";
+import { getPlatformDate } from "../../utils/getPlatformDate";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 interface NavigationProps {
-  navigate(screen: string, {}): void;
+  navigate(screen: string, { }): void;
   goBack(): void;
 }
 
@@ -105,6 +114,32 @@ export function SchedulingDetails() {
     })
   }, []);
 
+
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const headerStyleAnimation = useAnimatedStyle(() => {
+    return {
+      height: interpolate(scrollY.value,
+        [0, 200],
+        [200, 70],
+        Extrapolate.CLAMP
+      )
+    }
+  });
+
+  const sliderCarsStyleAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value,
+        [0, 150],
+        [1, 0],
+        Extrapolate.CLAMP
+      )
+    }
+  });
+
   return (
     <Container>
       <StatusBar
@@ -112,16 +147,37 @@ export function SchedulingDetails() {
         backgroundColor="transparent"
         translucent
       />
+      <Animated.View style={[
+        headerStyleAnimation,
+        styles.header,
+        { backgroundColor: colors.background_secondary }
+      ]}>
+        <Header>
+          <BackButton onPress={handleBack} />
+        </Header>
 
-      <Header>
-        <BackButton onPress={handleBack} />
-      </Header>
+        <Animated.View style={sliderCarsStyleAnimation}>
+          <CarImages>
+            <ImageSlider
+              imagesUrl={
+                !!car.photos ?
+                  car.photos : [{ id: car.thumbnail, photo: car.thumbnail }]
+              }
+            />
+          </CarImages>
+        </Animated.View>
+      </Animated.View>
 
-      <CarImages>
-        <ImageSlider imagesUrl={car.photos} />
-      </CarImages>
-
-      <Content>
+      <Animated.ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: 24,
+          paddingTop: getStatusBarHeight() + 160,
+          alignItems: "center"
+        }}
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        onScroll={scrollHandler}
+      >
         <Details>
           <Description>
             <Brand>{car.brand}</Brand>
@@ -179,13 +235,13 @@ export function SchedulingDetails() {
             <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
         </RentalPrice>
-      </Content>
-
+      </Animated.ScrollView>
+ 
       <Footer>
         <Button
           title="Alugar agora"
           color={colors.success}
-          onPress={handleSchedulingComplete} 
+          onPress={handleSchedulingComplete}
           enabled={!isLoading}
           loading={isLoading}
         />
@@ -193,3 +249,11 @@ export function SchedulingDetails() {
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    position: "absolute",
+    overflow: "hidden",
+    zIndex: 1,
+  }
+})
